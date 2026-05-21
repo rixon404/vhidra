@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vhidra — Finca Orgánica en Camagüey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --verde-claro: #DAD7CD;
+            --verde-suave: #A3B18A;
+            --verde-medio: #588157;
+            --verde-oscuro: #3A5A40;
+            --verde-profundo: #344E41;
+            --blanco: #FEFEFE;
+            --crema: #F5F1E8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--crema);
+            color: var(--verde-profundo);
+            line-height: 1.6;
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(52, 78, 65, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--verde-claro);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--verde-claro);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--verde-suave);
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .nav-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--verde-claro);
+            transition: 0.3s;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--verde-profundo) 0%, var(--verde-oscuro) 50%, var(--verde-medio) 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A3B18A' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(163, 177, 138, 0.2);
+            border: 1px solid var(--verde-suave);
+            color: var(--verde-claro);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--blanco);
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'Lora', serif;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: var(--verde-claro);
+            font-weight: 400;
+            margin-bottom: 2.5rem;
+            font-style: italic;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: var(--verde-suave);
+            color: var(--verde-profundo);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .hero-btn:hover {
+            background: var(--verde-claro);
+            transform: translateY(-2px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: var(--verde-suave);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* ===== SECTIONS GENERAL ===== */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--verde-profundo);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            color: var(--verde-medio);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--verde-suave);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            background: var(--blanco);
+        }
+
+        .about-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 450px;
+            background: linear-gradient(135deg, var(--verde-suave), var(--verde-medio));
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-image svg {
+            width: 120px;
+            height: 120px;
+            stroke: var(--blanco);
+            opacity: 0.6;
+        }
+
+        .about-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--verde-profundo);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            color: var(--verde-oscuro);
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .about-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .value-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .value-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--verde-claro);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .value-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--verde-profundo);
+        }
+
+        .value-item span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--verde-profundo);
+        }
+
+        /* ===== PRODUCTS ===== */
+        .products {
+            background: var(--crema);
+        }
+
+        .products-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--blanco);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(52, 78, 65, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(52, 78, 65, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--verde-profundo);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-info p {
+            font-size: 0.9rem;
+            color: var(--verde-medio);
+            line-height: 1.6;
+        }
+
+        .product-tag {
+            display: inline-block;
+            background: var(--verde-claro);
+            color: var(--verde-profundo);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact {
+            background: linear-gradient(135deg, var(--verde-profundo), var(--verde-oscuro));
+            color: var(--blanco);
+        }
+
+        .contact .section-header h2 {
+            color: var(--blanco);
+        }
+
+        .contact .section-header p {
+            color: var(--verde-claro);
+        }
+
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(163, 177, 138, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--verde-claro);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(163, 177, 138, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--blanco);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(218, 215, 205, 0.5);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--verde-suave);
+        }
+
+        .form-group select option {
+            background: var(--verde-profundo);
+            color: var(--blanco);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--verde-suave);
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            text-transform: none;
+            font-size: 0.9rem;
+            color: var(--verde-claro);
+            cursor: pointer;
+            margin-bottom: 0;
+            letter-spacing: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--verde-suave);
+            color: var(--verde-profundo);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--verde-claro);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--verde-profundo);
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(163, 177, 138, 0.1);
+        }
+
+        footer p {
+            color: var(--verde-suave);
+            font-size: 0.85rem;
+        }
+
+        footer .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--verde-claro);
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--verde-profundo);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: right 0.3s;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-toggle {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-image {
+                height: 300px;
+            }
+
+            .about-values {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-logo">VHIDRA</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#inicio" onclick="closeNav()">Inicio</a></li>
+            <li><a href="#nosotros" onclick="closeNav()">Nosotros</a></li>
+            <li><a href="#productos" onclick="closeNav()">Productos</a></li>
+            <li><a href="#contacto" onclick="closeNav()">Contacto</a></li>
+        </ul>
+        <div class="nav-toggle" id="navToggle" onclick="toggleNav()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <span class="hero-badge">Finca Orgánica — Camagüey, Cuba</span>
+            <h1>VHIDRA</h1>
+            <p class="hero-subtitle">Sembrado con pasión, cosechado con paciencia</p>
+            <a href="#productos" class="hero-btn">Ver Productos</a>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="nosotros">
+        <div class="section-header">
+            <h2>Nuestra Historia</h2>
+            <div class="divider"></div>
+            <p>Un proyecto nacido del amor por la tierra y la comunidad</p>
+        </div>
+        <div class="about-grid">
+            <div class="about-image">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22c4-4 8-7.5 8-12a8 8 0 1 0-16 0c0 4.5 4 8 8 12z"/>
+                    <path d="M12 12V8"/>
+                    <path d="M12 12c2-1 4-2 4-4"/>
+                    <path d="M12 12c-2-1-4-2-4-4"/>
+                    <path d="M8 16c1.5-1 3-2 4-4"/>
+                    <path d="M16 16c-1.5-1-3-2-4-4"/>
+                </svg>
+            </div>
+            <div class="about-text">
+                <h3>De la tierra a tu mesa</h3>
+                <p>
+                    Vhidra es un proyecto nacido del sueño de <strong>Ailena</strong>, una mujer cubana con amor por la tierra y la vida. Con la ayuda de muchas amistades — tanto de Cuba como de todo el mundo — trabajadores y voluntarios que creen en este sueño, Vhidra cobra vida cada día.
+                </p>
+                <p>
+                    En nuestra finca, en las afueras de Camagüey, todo se siembra con pasión y paciencia. Cada vegetal, cada fruta, lleva consigo el cariño de quienes trabajan la tierra de forma orgánica y respetuosa.
+                </p>
+                <p>
+                    Creemos en una alimentación sana, en el comercio justo y en construir puentes entre el campo y los restaurantes y hoteles que valoran la calidad y la frescura.
+                </p>
+                <div class="about-values">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22c4-4 8-7.5 8-12a8 8 0 1 0-16 0c0 4.5 4 8 8 12z"/>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                <path d="M9 9h.01M15 9h.01"/>
+                            </svg>
+                        </div>
+                        <span>100% Orgánico</span>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                        </div>
+                        <span>Hecho con amor</span>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                            </svg>
+                        </div>
+                        <span>Comunidad global</span>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <span> Frescura diaria</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="products" id="productos">
+        <div class="section-header">
+            <h2>Nuestros Productos</h2>
+            <div class="divider"></div>
+            <p>Frutas y vegetales frescos, cosechados directamente de nuestra finca</p>
+        </div>
+        <div class="products-grid">
+
+            <!-- Marañón -->
+            <div class="product-card">
+                <img src="assets/maranon.webp" alt="Marañón fresco" class="product-image">
+                <div class="product-info">
+                    <h3>Marañón</h3>
+                    <p>Fruta tropical jugosa y refrescante, perfecta para jugos, postres y conservas artesanales.</p>
+                    <span class="product-tag">Fruta</span>
+                </div>
+            </div>
+
+            <!-- Rúcula -->
+            <div class="product-card">
+                <img src="assets/rucula.webp" alt="Rúcula fresca" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23588157%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23FEFEFE%22 font-size=%2224%22 font-family=%22serif%22%3ERúcula%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Rúcula</h3>
+                    <p>Hojas verdes con sabor intenso y picante, ideales para ensaladas gourmet y acompañamientos.</p>
+                    <span class="product-tag">Vegetal de hoja</span>
+                </div>
+            </div>
+
+            <!-- Acelga Morada -->
+            <div class="product-card">
+                <img src="assets/acelga morada.jpeg" alt="Acelga morada" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%233A5A40%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23DAD7CD%22 font-size=%2220%22 font-family=%22serif%22%3EAcelga Morada%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Acelga Morada</h3>
+                    <p>Variedad única con tallos y nervaduras de color intenso, rica en nutrientes y versátil en cocina.</p>
+                    <span class="product-tag">Vegetal de hoja</span>
+                </div>
+            </div>
+
+            <!-- Plátano -->
+            <div class="product-card">
+                <img src="assets/platanos.jpg" alt="Plátano fresco" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23A3B18A%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23344E41%22 font-size=%2224%22 font-family=%22serif%22%3EPlátano%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Plátano</h3>
+                    <p>Base de la gastronomía cubana, perfecto para tostones, maduros y una variedad infinita de platos.</p>
+                    <span class="product-tag">Fruta / Tubérculo</span>
+                </div>
+            </div>
+
+            <!-- Papaya -->
+            <div class="product-card">
+                <img src="assets/fruta_bomba.jpg" alt="Papaya fresca" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23588157%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23FEFEFE%22 font-size=%2224%22 font-family=%22serif%22%3EPapaya%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Papaya</h3>
+                    <p>Fruta tropical dulce y aromática, rica en vitaminas y perfecta para desayunos y batidos.</p>
+                    <span class="product-tag">Fruta</span>
+                </div>
+            </div>
+
+            <!-- Mango -->
+            <div class="product-card">
+                <img src="assets/mango.jpg" alt="Mango fresco" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%233A5A40%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23DAD7CD%22 font-size=%2224%22 font-family=%22serif%22%3EMango%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Mango</h3>
+                    <p>El rey de las frutas tropicales, dulce y jugoso, ideal para postres, jugos y ensaladas frescas.</p>
+                    <span class="product-tag">Fruta</span>
+                </div>
+            </div>
+
+            <!-- Tomate -->
+            <div class="product-card">
+                <img src="assets/tomate.jpg" alt="Tomates frescos" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23A3B18A%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23344E41%22 font-size=%2224%22 font-family=%22serif%22%3ETomate%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Tomate</h3>
+                    <p>Tomates maduros y sabrosos, cultivados al sol camagüeyano, esenciales para cualquier cocina.</p>
+                    <span class="product-tag">Vegetal</span>
+                </div>
+            </div>
+
+            <!-- Pepino -->
+            <div class="product-card">
+                <img src="assets/pepino.jpeg" alt="Pepinos frescos" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23588157%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23FEFEFE%22 font-size=%2224%22 font-family=%22serif%22%3EPepino%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Pepino</h3>
+                    <p>Fresco y crujiente, perfecto para ensaladas, ceviches y como acompañamiento refrescante.</p>
+                    <span class="product-tag">Vegetal</span>
+                </div>
+            </div>
+
+            <!-- Fruta Bomba 
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1629828874514-c1e5103f2100?w=600&h=400&fit=crop" alt="Fruta bomba" class="product-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%233A5A40%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23DAD7CD%22 font-size=%2218%22 font-family=%22serif%22%3EFruta Bomba%3C/text%3E%3C/svg%3E'">
+                <div class="product-info">
+                    <h3>Fruta Bomba</h3>
+                    <p>La papaya cubana por excelencia, dulce y nutritiva, ideal para jugos naturales y postres tropicales.</p>
+                    <span class="product-tag">Fruta</span>
+                </div>
+            </div> -->
+
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contacto">
+        <div class="section-header">
+            <h2>¿Le interesan nuestros producto?</h2>
+            <div class="divider"></div>
+            <p>Cuéntanos qué productos le pudieran interesar y nos pondremos en contacto directamente por WhatsApp</p>
+        </div>
+        <div class="contact-container">
+            <form class="contact-form" id="contactForm" onsubmit="sendToWhatsApp(event)">
+                <div class="form-group">
+                    <label for="nombre">Nombre de su empresa</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Hotel Camagüey Plaza" required>
+                </div>
+                <div class="form-group">
+                    <label for="persona">Persona que contacta</label>
+                    <input type="text" id="persona" name="persona" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label>Productos que le interesan</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-maranon" name="productos" value="Marañón">
+                            <label for="prod-maranon">Marañón</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-rucula" name="productos" value="Rúcula">
+                            <label for="prod-rucula">Rúcula</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-acelga" name="productos" value="Acelga Morada">
+                            <label for="prod-acelga">Acelga Morada</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-platano" name="productos" value="Plátano">
+                            <label for="prod-platano">Plátano</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-papaya" name="productos" value="Papaya">
+                            <label for="prod-papaya">Papaya</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-mango" name="productos" value="Mango">
+                            <label for="prod-mango">Mango</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-tomate" name="productos" value="Tomate">
+                            <label for="prod-tomate">Tomate</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-pepino" name="productos" value="Pepino">
+                            <label for="prod-pepino">Pepino</label>
+                        </div>
+                        <!--
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="prod-frutabomba" name="productos" value="Fruta Bomba">
+                            <label for="prod-frutabomba">Fruta Bomba</label>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Mensaje adicional (opcional)</label>
+                    <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos sobre tus necesidades, cantidades estimadas, frecuencia de entrega..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    Enviar por WhatsApp
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">VHIDRA</div>
+        <p>Finca orgánica en las afueras de Camagüey, Cuba</p>
+        <p style="margin-top: 0.5rem; opacity: 0.6;">Sembrado con pasión, cosechado con paciencia</p>
+    </footer>
+
+    <script>
+        function toggleNav() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        function closeNav() {
+            document.getElementById('navLinks').classList.remove('active');
+        }
+
+        function sendToWhatsApp(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const persona = document.getElementById('persona').value.trim();
+            const mensaje = document.getElementById('mensaje').value.trim();
+
+            const checkboxes = document.querySelectorAll('input[name="productos"]:checked');
+            const productos = Array.from(checkboxes).map(cb => cb.value);
+
+            if (productos.length === 0) {
+                alert('Por favor selecciona al menos un producto que te interese.');
+                return;
+            }
+
+            let text = `¡Hola! Soy *${persona}* de *${nombre}*.\n\n`;
+            text += `Nos interesan los siguientes productos de Vhidra:\n`;
+            productos.forEach(p => {
+                text += `  ${p}\n`;
+            });
+
+            if (mensaje) {
+                text += `\nMensaje adicional:\n${mensaje}`;
+            }
+
+            text += `\nEsperamos su respuesta para coordinar. Gracias!`;
+
+            // CAMBIA este número por tu número real de WhatsApp con código de país
+            // Ejemplo para Cuba: 53XXXXXXXX
+            const phoneNumber = '5300000000';
+
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
